@@ -470,7 +470,7 @@
         
         <div class="section-header">PRIMARY OBJECTIVES</div>
         
-        <div class="objective-card active" data-objective="1" data-status="active" data-survivor="false">
+        <div class="objective-card" data-objective="1" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-01</div>
                 <div class="objective-title">ENTER DEAD HILLS</div>
@@ -955,7 +955,7 @@ import {
     equalTo 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// ⭐ 1. YOUR FIREBASE CONFIGURATION 
+// ⭐ 1. YOUR FIREBASE CONFIGURATION (Retained)
 const firebaseConfig = {
   apiKey: "AIzaSyAn3oG0z19XbBqy5nzwhCtsqK64rNDeJQA",
   authDomain: "muthr6000.firebaseapp.com",
@@ -977,7 +977,7 @@ const motherObjectivesRef = ref(db, 'objectives');
 const allCards = document.querySelectorAll('.objective-card');
 
 // ---------------------------------------------------
-// MU/TH/UR PUSH/REMOVE FUNCTIONS (Original Logic Re-integrated)
+// MU/TH/UR PUSH/REMOVE FUNCTIONS (Original Logic Re-integrated & Priority Fixed)
 // ---------------------------------------------------
 
 /**
@@ -987,23 +987,28 @@ async function sendObjectiveToMother(card) {
     const title = card.querySelector(".objective-title").innerText.trim();
     const description = card.querySelector(".objective-description").innerText.trim();
     const objectiveNumber = card.querySelector(".objective-number").innerText.trim();
+    
+    // FIX 2: More robust selector to ensure priority is extracted correctly
+    const priorityElement = card.querySelector('.objective-details div[class*="priority-"]');
+    const priority = priorityElement ? priorityElement.innerText.trim().toUpperCase() : 'STANDARD';
 
     const newObjective = {
         title: title,
         number: objectiveNumber,
         description: description.substring(0, 100) + '...', // Limit description size
+        priority: priority, // Now correctly included
         timestamp: Date.now(),
         status: "active",
         announced: false
     };
 
-    // Check if it already exists before pushing
+    // Check if it already exists before pushing (Requires Firebase index on 'title')
     const q = query(motherObjectivesRef, orderByChild("title"), equalTo(title));
     const snap = await get(q);
 
     if (!snap.exists()) {
         await push(motherObjectivesRef, newObjective);
-        console.log("Pushed to MU/TH/UR:", newObjective.title);
+        console.log("Pushed to MU/TH/UR:", newObjective.title, "with Priority:", priority);
     } else {
         console.log("Objective already active in MU/TH/UR.");
     }
@@ -1118,10 +1123,12 @@ async function cycleStatus(e) {
     // 2. PERSISTENCE LOGIC (Saves all 14 objectives)
     // ---------------------------------------------------
     const currentStatuses = {};
+    // Iterate over all cards to build the complete state payload
     allCards.forEach(c => {
         const objectiveNumber = c.dataset.objective;
         const statusKey = `OBJ-${objectiveNumber.padStart(2, '0')}`;
         // Set the status to the NEW one for the clicked card, otherwise use its current DOM status
+        // Note: The DOM status is current because onValue handles updates, but we use the new status for the clicked card before sending the update.
         currentStatuses[statusKey] = c === card ? newStatus : c.dataset.status;
     });
 
