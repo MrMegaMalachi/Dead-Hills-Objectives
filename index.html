@@ -474,7 +474,7 @@
             <div class="objective-header">
                 <div class="objective-number">OBJ-01</div>
                 <div class="objective-title">ENTER DEAD HILLS</div>
-                <div class="objective-status status-active">ACTIVE</div>
+                <div class="objective-status status-pending">PENDING</div>
             </div>
             <div class="objective-body">
                 <div class="objective-description">
@@ -939,10 +939,23 @@
     </div>
     
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { 
+    initializeApp 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { 
+    getDatabase, 
+    ref, 
+    set, 
+    onValue, 
+    get, 
+    push, 
+    remove, 
+    query, 
+    orderByChild, 
+    equalTo 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// ⭐ 1. YOUR FIREBASE CONFIGURATION (Ensure these values match your Firebase project)
+// ⭐ 1. YOUR FIREBASE CONFIGURATION 
 const firebaseConfig = {
   apiKey: "AIzaSyAn3oG0z19XbBqy5nzwhCtsqK64rNDeJQA",
   authDomain: "muthr6000.firebaseapp.com",
@@ -956,18 +969,72 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-// This is the location in your database where ALL statuses will be saved
+// Persistent status location for all 14 objectives
 const statusesRef = ref(db, 'dead_hills_objective_statuses'); 
+// Original "Mother" objective list location for active missions
+const motherObjectivesRef = ref(db, 'objectives'); 
 
 const allCards = document.querySelectorAll('.objective-card');
 
 // ---------------------------------------------------
-// CORE FUNCTIONS
+// MU/TH/UR PUSH/REMOVE FUNCTIONS (Original Logic Re-integrated)
+// ---------------------------------------------------
+
+/**
+ * Pushes the objective to the 'objectives' list (for the other repo)
+ */
+async function sendObjectiveToMother(card) {
+    const title = card.querySelector(".objective-title").innerText.trim();
+    const description = card.querySelector(".objective-description").innerText.trim();
+    const objectiveNumber = card.querySelector(".objective-number").innerText.trim();
+
+    const newObjective = {
+        title: title,
+        number: objectiveNumber,
+        description: description.substring(0, 100) + '...', // Limit description size
+        timestamp: Date.now(),
+        status: "active",
+        announced: false
+    };
+
+    // Check if it already exists before pushing
+    const q = query(motherObjectivesRef, orderByChild("title"), equalTo(title));
+    const snap = await get(q);
+
+    if (!snap.exists()) {
+        await push(motherObjectivesRef, newObjective);
+        console.log("Pushed to MU/TH/UR:", newObjective.title);
+    } else {
+        console.log("Objective already active in MU/TH/UR.");
+    }
+}
+
+/**
+ * Clears the objective from the 'objectives' list (for the other repo)
+ */
+async function clearObjectiveFromMother(card) {
+    const title = card.querySelector(".objective-title").innerText.trim();
+
+    const q = query(motherObjectivesRef, orderByChild("title"), equalTo(title));
+    const snap = await get(q);
+
+    if (snap.exists()) {
+        Object.keys(snap.val()).forEach(key => {
+            remove(ref(db, "objectives/" + key));
+        });
+        console.log("Cleared from MU/TH/UR:", title);
+    } else {
+        console.log("Objective not found in MU/TH/UR to clear.");
+    }
+}
+
+
+// ---------------------------------------------------
+// CORE FUNCTIONS (Handles UI and Persistence)
 // ---------------------------------------------------
 
 /**
  * Updates the UI based on the statuses received from Firebase.
- * This function makes the page reflect the database state.
  */
 function updateUI(statuses) {
     let completedCount = 0;
@@ -1034,22 +1101,36 @@ async function cycleStatus(e) {
         newStatus = 'pending';
     }
 
-    // 1. Collect all current statuses from the DOM before we save the new state
+    // ---------------------------------------------------
+    // 1. MU/TH/UR INTEGRATION LOGIC
+    // ---------------------------------------------------
+    if (newStatus === 'active') {
+        // PUSH to MU/TH/UR's 'objectives/' path
+        sendObjectiveToMother(card);
+    } else if (currentStatus === 'active' && (newStatus === 'completed' || newStatus === 'pending')) {
+        // REMOVE from MU/TH/UR's 'objectives/' path when it moves away from active
+        clearObjectiveFromMother(card);
+    }
+    // ---------------------------------------------------
+
+
+    // ---------------------------------------------------
+    // 2. PERSISTENCE LOGIC (Saves all 14 objectives)
+    // ---------------------------------------------------
     const currentStatuses = {};
     allCards.forEach(c => {
         const objectiveNumber = c.dataset.objective;
         const statusKey = `OBJ-${objectiveNumber.padStart(2, '0')}`;
-        // Set the status to the NEW one for the clicked card, otherwise use its current status
+        // Set the status to the NEW one for the clicked card, otherwise use its current DOM status
         currentStatuses[statusKey] = c === card ? newStatus : c.dataset.status;
     });
 
-    // 2. Push the complete, updated state to Firebase using set().
-    // This action saves the data and triggers the 'onValue' listener for all connected clients.
+    // Push the complete, updated state to Firebase (triggers persistence and real-time sync)
     try {
         await set(statusesRef, currentStatuses);
-        console.log(`Objective ${card.querySelector('.objective-number').innerText} status updated to ${newStatus}. State pushed to Firebase.`);
+        console.log(`Objective ${card.querySelector('.objective-number').innerText} status updated to ${newStatus}. State saved and synced.`);
     } catch(error) {
-        console.error("Failed to update Firebase:", error);
+        console.error("Failed to update main status Firebase:", error);
     }
 }
 
@@ -1062,23 +1143,18 @@ async function cycleStatus(e) {
  * Initializes the Firebase listener and sets up click handlers.
  */
 function init() {
-    // 1. Set up Real-Time Listener
-    // This runs immediately on load (persistence) and every time the data changes (real-time sync).
+    // 1. Set up Real-Time Listener (Handles persistence and multi-user sync)
     onValue(statusesRef, (snapshot) => {
         const statuses = snapshot.val();
         if (statuses) {
             updateUI(statuses); 
-        } else {
-            console.log("No objective status data found in Firebase. Displaying default 'pending' state.");
-            // If no data exists, updateUI will run with 'null' and default everything to 'pending'
-        }
+        } 
     }, (error) => {
         console.error("Error reading from Firebase:", error);
     });
 
     // 2. Set up Click Handlers for all cards
     allCards.forEach(card => {
-        // Attach the cycleStatus function to the card click event
         card.addEventListener('click', cycleStatus);
     });
 }
