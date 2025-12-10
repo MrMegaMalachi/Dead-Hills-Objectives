@@ -13,6 +13,8 @@
         .terminal {
             max-width: 1000px; margin: 0 auto; border: 2px solid #00ff41; padding: 30px;
             box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); position: relative;
+            /* Added width 100% to prevent overflow within padding */
+            width: 100%;
         }
         .terminal::before {
             content: ''; position: absolute; inset: 0;
@@ -21,16 +23,18 @@
         }
         
         .header { text-align: center; border-bottom: 2px solid #00ff41; padding-bottom: 20px; margin-bottom: 30px; }
-        .header h1 { font-size: 2em; letter-spacing: 8px; font-weight: 900; text-shadow: 0 0 10px #00ff41; margin-bottom: 10px; }
+        .header h1 { font-size: 2em; letter-spacing: 8px; font-weight: 900; text-shadow: 0 0 10px #00ff41; margin-bottom: 10px; word-wrap: break-word; }
         .header .subline { font-size: 0.9em; letter-spacing: 3px; opacity: 0.8; }
         
         .status-bar {
             display: flex; justify-content: space-between; background: rgba(0,255,65,0.1);
             border: 1px solid #00ff41; padding: 15px; margin-bottom: 30px; font-size: 0.85em;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
+            gap: 15px;
         }
         .status-item { display: flex; flex-direction: column; align-items: center; }
-        .status-label { opacity: 0.7; margin-bottom: 5px; }
-        .status-value { font-weight: 700; font-size: 1.2em; }
+        .status-label { opacity: 0.7; margin-bottom: 5px; text-align: center; }
+        .status-value { font-weight: 700; font-size: 1.2em; text-align: center; }
         
         .objective-card {
             border: 2px solid #00ff41; margin-bottom: 20px; background: rgba(0,255,65,0.03);
@@ -45,13 +49,14 @@
         .objective-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 20px; border-bottom: 1px solid #00ff41; background: rgba(0,255,65,0.05);
+            gap: 10px;
         }
         .objective-card.completed .objective-header { background: rgba(100,100,100,0.1); border-bottom-color: #666; }
         .objective-card.active .objective-header { background: rgba(255,255,0,0.1); border-bottom-color: #ffff00; }
         
-        .objective-number { font-size: 1.5em; font-weight: 900; min-width: 100px; }
+        .objective-number { font-size: 1.5em; font-weight: 900; min-width: 100px; flex-shrink: 0; }
         .objective-title { flex-grow: 1; font-size: 1.2em; font-weight: 700; letter-spacing: 1px; }
-        .objective-status { font-size: 0.9em; padding: 5px 15px; border: 1px solid; border-radius: 3px; font-weight: 700; }
+        .objective-status { font-size: 0.9em; padding: 5px 15px; border: 1px solid; border-radius: 3px; font-weight: 700; white-space: nowrap; }
         .status-pending { border-color: #00ff41; color: #00ff41; }
         .status-active { border-color: #ffff00; color: #ffff00; background: rgba(255,255,0,0.1); }
         .status-complete { border-color: #666; color: #666; }
@@ -63,7 +68,7 @@
         .objective-card.active .objective-details { border-left-color: #ffff00; }
         
         .detail-row { display: flex; margin-bottom: 8px; }
-        .detail-label { font-weight: 700; min-width: 120px; opacity: 0.8; }
+        .detail-label { font-weight: 700; min-width: 120px; opacity: 0.8; flex-shrink: 0; }
         
         .priority-critical { color: #ff4400; font-weight: 900; }
         .priority-high { color: #ffff00; font-weight: 700; }
@@ -77,9 +82,84 @@
         
         .note-box { border: 1px solid #ffff00; background: rgba(255,255,0,0.05); padding: 15px; margin: 20px 0; }
         .note-title { color: #ffff00; font-weight: 700; margin-bottom: 10px; }
-        .section-header { font-size: 1.5em; font-weight: 700; text-align: center; padding: 15px; background: rgba(0,255,65,0.1); border: 1px solid #00ff41; margin-bottom: 25px; letter-spacing: 3px; }
+        .section-header { font-size: 1.5em; font-weight: 700; text-align: center; padding: 15px; background: rgba(0,255,65,0.1); border: 1px solid #00ff41; margin-bottom: 25px; letter-spacing: 3px; word-wrap: break-word; }
         
         .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #00ff41; font-size: 0.8em; opacity: 0.6; }
+
+        /* ========================================= */
+        /* MOBILE RESPONSIVENESS FIXES               */
+        /* ========================================= */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px; /* Reduce outer padding */
+            }
+
+            .terminal {
+                padding: 15px; /* Reduce inner terminal padding */
+                border-width: 1px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
+                letter-spacing: 3px;
+                line-height: 1.2;
+            }
+
+            .header .subline {
+                font-size: 0.75em;
+                letter-spacing: 1px;
+            }
+
+            /* Stack the status bar into a 2x2 grid */
+            .status-bar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            /* Adjust Objective Header for small screens */
+            .objective-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .objective-number {
+                font-size: 1.2em;
+                min-width: auto;
+                color: #00ff41;
+                opacity: 0.8;
+            }
+            
+            .objective-title {
+                font-size: 1.1em;
+            }
+
+            .objective-status {
+                align-self: flex-start;
+                font-size: 0.8em;
+            }
+
+            /* Stack details vertically so text doesn't get squashed */
+            .detail-row {
+                flex-direction: column;
+                margin-bottom: 12px;
+            }
+
+            .detail-label {
+                min-width: auto;
+                margin-bottom: 2px;
+                font-size: 0.85em;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .section-header {
+                font-size: 1.2em;
+                letter-spacing: 1px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -105,7 +185,6 @@
         <div class="divider"></div>
         <div class="section-header">PRIMARY OBJECTIVES</div>
 
-        <!-- OBJECTIVE 1 -->
         <div class="objective-card" data-objective="1" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-01</div>
@@ -124,7 +203,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 2 -->
         <div class="objective-card" data-objective="2" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-02</div>
@@ -144,7 +222,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 3 -->
         <div class="objective-card" data-objective="3" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-03</div>
@@ -167,7 +244,6 @@
         <div class="divider"></div>
         <div class="section-header">SURVIVOR EXTRACTION OBJECTIVES</div>
 
-        <!-- OBJECTIVE 4 -->
         <div class="objective-card" data-objective="4" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-04</div>
@@ -187,7 +263,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 5 -->
         <div class="objective-card" data-objective="5" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-05</div>
@@ -207,7 +282,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 6 -->
         <div class="objective-card" data-objective="6" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-06</div>
@@ -227,7 +301,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 7 -->
         <div class="objective-card" data-objective="7" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-07</div>
@@ -247,7 +320,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 8 -->
         <div class="objective-card" data-objective="8" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-08</div>
@@ -267,7 +339,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 10 -->
         <div class="objective-card" data-objective="10" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-10</div>
@@ -290,7 +361,6 @@
         <div class="divider"></div>
         <div class="section-header">INVESTIGATION OBJECTIVES</div>
 
-        <!-- OBJECTIVE 9 -->
         <div class="objective-card" data-objective="9" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-09</div>
@@ -310,7 +380,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 11 -->
         <div class="objective-card" data-objective="11" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-11</div>
@@ -330,7 +399,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 12 -->
         <div class="objective-card" data-objective="12" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-12</div>
@@ -353,7 +421,6 @@
         <div class="divider"></div>
         <div class="section-header">SECONDARY OBJECTIVES</div>
 
-        <!-- OBJECTIVE 13 -->
         <div class="objective-card" data-objective="13" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-13</div>
@@ -373,7 +440,6 @@
             </div>
         </div>
 
-        <!-- OBJECTIVE 14 -->
         <div class="objective-card" data-objective="14" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-14</div>
