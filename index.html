@@ -349,8 +349,6 @@
                 padding: 12px;
                 letter-spacing: 1px;
             }
-
-            /* ... rest of your existing media queries ... */
             
             .header .subline {
                 font-size: 0.7em;
@@ -1017,14 +1015,12 @@ const clearDbButton = document.getElementById('clear-db-button');
 
 /**
  * Pushes or UPDATES the objective in the 'objectives' list using the objective number as the stable key.
- * This sends a single SET event to the player app's listener, eliminating duplication issues.
  */
 async function sendObjectiveToMother(card) {
     const objectiveNumber = card.querySelector(".objective-number").innerText.trim(); // e.g., "OBJ-01"
     const title = card.querySelector(".objective-title").innerText.trim();
     const description = card.querySelector(".objective-description").innerText.trim();
     
-    // Find the priority text using a class attribute selector
     const priorityElement = card.querySelector('.objective-details div[class*="priority-"]');
     const priority = priorityElement ? priorityElement.innerText.trim().toUpperCase() : 'STANDARD';
 
@@ -1038,7 +1034,6 @@ async function sendObjectiveToMother(card) {
         announced: false
     };
 
-    // Use SET with the objectiveNumber as the fixed key
     const objectiveKeyRef = ref(motherObjectivesRef, objectiveNumber);
     try {
         await set(objectiveKeyRef, newObjective);
@@ -1054,7 +1049,6 @@ async function sendObjectiveToMother(card) {
 async function clearObjectiveFromMother(card) {
     const objectiveNumber = card.querySelector(".objective-number").innerText.trim(); // e.g., "OBJ-01"
 
-    // Use REMOVE on the fixed key
     const objectiveKeyRef = ref(motherObjectivesRef, objectiveNumber);
     try {
         await remove(objectiveKeyRef);
@@ -1065,7 +1059,7 @@ async function clearObjectiveFromMother(card) {
 }
 
 // ---------------------------------------------------
-// 🔥 NEW: ONE-TIME CLEANUP FUNCTION
+// ONE-TIME CLEANUP FUNCTION
 // ---------------------------------------------------
 
 /**
@@ -1073,18 +1067,18 @@ async function clearObjectiveFromMother(card) {
  * to eliminate legacy duplicates from previous implementation attempts.
  */
 async function clearAllMotherObjectives() {
+    if (!confirm("WARNING: This will permanently delete ALL active objectives from the 'objectives' database path. DO NOT run during a game. Continue?")) {
+        return;
+    }
     clearDbButton.textContent = 'CLEANING IN PROGRESS... DO NOT INTERRUPT';
     clearDbButton.disabled = true;
 
     try {
-        // Fetch ALL objectives (both fixed keys and old random keys)
         const snapshot = await get(motherObjectivesRef);
         const objectivesData = snapshot.val();
         
         if (objectivesData) {
             const keys = Object.keys(objectivesData);
-            let count = 0;
-            
             // Delete the entire collection path to ensure a clean slate
             await remove(motherObjectivesRef);
             
@@ -1180,20 +1174,18 @@ async function cycleStatus(e) {
     }
 
     // ---------------------------------------------------
-    // 1. MU/TH/UR INTEGRATION LOGIC
+    // 1. MU/TH/UR INTEGRATION LOGIC (For player app)
     // ---------------------------------------------------
     if (newStatus === 'active') {
-        // Use SET (Update/Create) on the fixed key: OBJ-XX
         await sendObjectiveToMother(card);
     } else if (currentStatus === 'active' && (newStatus === 'completed' || newStatus === 'pending')) {
-        // Use REMOVE on the fixed key: OBJ-XX
         await clearObjectiveFromMother(card);
     }
     // ---------------------------------------------------
 
 
     // ---------------------------------------------------
-    // 2. PERSISTENCE LOGIC (Saves all 14 objectives state)
+    // 2. PERSISTENCE AND LOCAL UI REFRESH LOGIC
     // ---------------------------------------------------
     const currentStatuses = {};
     // Iterate over all cards to build the complete state payload
@@ -1208,8 +1200,14 @@ async function cycleStatus(e) {
     try {
         await set(statusesRef, currentStatuses);
         console.log(`Objective ${card.querySelector('.objective-number').innerText} status updated to ${newStatus}. State saved and synced.`);
+
+        // ⭐ FIX: Immediately trigger the UI update locally after a successful database write.
+        // This ensures the GM terminal is responsive without waiting for the listener round-trip.
+        updateUI(currentStatuses);
+        
     } catch(error) {
         console.error("Failed to update main status Firebase:", error);
+        alert("CRITICAL ERROR: Failed to save status to database. Please check console and connection.");
     }
 }
 
@@ -1222,10 +1220,12 @@ async function cycleStatus(e) {
  * Initializes the Firebase listener and sets up click handlers.
  */
 function init() {
-    // 1. Set up Real-Time Listener (Handles persistence and multi-user sync)
+    // 1. Set up Real-Time Listener (Handles persistence and multi-user sync for *other* users)
     onValue(statusesRef, (snapshot) => {
         const statuses = snapshot.val();
         if (statuses) {
+            // Note: This function updates the UI. It will fire locally when you click a card,
+            // but the manual call in cycleStatus is for immediate local responsiveness.
             updateUI(statuses); 
         } 
     }, (error) => {
