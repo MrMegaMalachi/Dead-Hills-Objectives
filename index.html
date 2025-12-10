@@ -470,354 +470,459 @@
         
         <div class="section-header">PRIMARY OBJECTIVES</div>
         
-<!-- OBJECTIVE 1 -->
-<div class="objective-card active" data-objective="1" data-status="active" data-survivor="false" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-01</div>
-        <div class="objective-title">ENTER DEAD HILLS</div>
-        <div class="objective-status status-active">ACTIVE</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Gain entry to Dead Hills colony through perimeter gate. Establish initial foothold and assess immediate area for threats. Perimeter security protocols must be overridden to allow ARC deployment and team insertion.
-        </div>
-        <div class="objective-details">
-            <div class="detail-row">
-                <div class="detail-label">PRIORITY:</div>
-                <div class="priority-critical">CRITICAL</div>
+        <!-- OBJECTIVE 1 -->
+        <div class="objective-card active" data-objective="1" data-status="active" data-survivor="false" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-01</div>
+                <div class="objective-title">ENTER DEAD HILLS</div>
+                <div class="objective-status status-active">ACTIVE</div>
             </div>
-            <div class="detail-row">
-                <div class="detail-label">LOCATION:</div>
-                <div>Main Gate - Colony Perimeter</div>
-            </div>
-            <div class="detail-row">
-                <div class="detail-label">REQUIREMENTS:</div>
-                <div>Terminal access / Security override</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PUSH TO MU/TH/UR BUTTON -->
-    <button 
-        class="pushToMother"
-        data-title="ENTER DEAD HILLS"
-        data-desc="Gain entry to Dead Hills colony through perimeter gate. Establish initial foothold and assess immediate area for threats."
-        data-priority="CRITICAL">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 2 -->
-<div class="objective-card" data-objective="2" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-02</div>
-        <div class="objective-title">REACTIVATE THE COLONY'S SATCOM</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Restore satellite communications array to full operational status. This will enable Hayes to access colony systems, track survivor PDT signals, and maintain command link with Otago.
-        </div>
-        <div class="objective-details">
-            <div class="detail-row">
-                <div class="detail-label">PRIORITY:</div>
-                <div class="priority-critical">CRITICAL</div>
-            </div>
-            <div class="detail-row">
-                <div class="detail-label">LOCATION:</div>
-                <div>SatCom Room - Ground Level</div>
-            </div>
-            <div class="detail-row">
-                <div class="detail-label">REQUIREMENTS:</div>
-                <div>COMTECH skill / System restoration</div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Gain entry to Dead Hills colony through perimeter gate. Establish initial foothold and assess immediate area for threats. Perimeter security protocols must be overridden to allow ARC deployment and team insertion.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-critical">CRITICAL</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Main Gate - Colony Perimeter</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">REQUIREMENTS:</div>
+                        <div>Terminal access / Security override</div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="REACTIVATE THE COLONY'S SATCOM"
-        data-desc="Restore satellite communications array to regain full command link and survivor PDT tracking."
-        data-priority="CRITICAL">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 3 -->
-<div class="objective-card" data-objective="3" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-03</div>
-        <div class="objective-title">DEACTIVATE THE EMERGENCY LOCKDOWN</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Override colony-wide emergency lockdown from Township HQ command center. Current protocols have sealed multiple access points and disabled automated systems.
-        </div>
-        <div class="objective-details">
-            <div class="detail-row">
-                <div class="detail-label">PRIORITY:</div>
-                <div class="priority-critical">CRITICAL</div>
+        
+        <!-- OBJECTIVE 2 -->
+        <div class="objective-card" data-objective="2" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-02</div>
+                <div class="objective-title">REACTIVATE THE COLONY'S SATCOM</div>
+                <div class="objective-status status-pending">PENDING</div>
             </div>
-            <div class="detail-row">
-                <div class="detail-label">LOCATION:</div>
-                <div>Command Room - Level 1</div>
-            </div>
-            <div class="detail-row">
-                <div class="detail-label">REQUIREMENTS:</div>
-                <div>Access to Level 1 / Command terminal</div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Restore satellite communications array to full operational status. This will enable Hayes to access colony systems, track survivor PDT signals, and maintain command link with Otago. Communications blackout must be resolved before full assessment possible.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-critical">CRITICAL</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>SatCom Room - Ground Level</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">REQUIREMENTS:</div>
+                        <div>COMTECH skill / System restoration</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">UNLOCKS:</div>
+                        <div>Survivor tracking / System access</div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="DEACTIVATE THE EMERGENCY LOCKDOWN"
-        data-desc="Override colony-wide emergency lockdown to regain full access to colony systems."
-        data-priority="CRITICAL">Push to MU/TH/UR</button>
-</div>
-
-<div class="divider"></div>
-<div class="section-header">SURVIVOR EXTRACTION OBJECTIVES</div>
-
-<!-- OBJECTIVE 4 -->
-<div class="objective-card" data-objective="4" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-04</div>
-        <div class="objective-title">SAVE ENGINEER MACALLAN</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Locate and extract Engineer Macallan from sealed room. PDT indicates the survivor is alive but barricaded.
-        </div>
-        <div class="objective-details">
-            <div class="detail-row">
-                <div class="detail-label">PRIORITY:</div>
-                <div class="priority-high">HIGH</div>
+        
+        <!-- OBJECTIVE 3 -->
+        <div class="objective-card" data-objective="3" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-03</div>
+                <div class="objective-title">DEACTIVATE THE EMERGENCY LOCKDOWN</div>
+                <div class="objective-status status-pending">PENDING</div>
             </div>
-            <div class="detail-row">
-                <div class="detail-label">LOCATION:</div>
-                <div>Ground Level - Eastern Section</div>
-            </div>
-        </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="SAVE ENGINEER MACALLAN"
-        data-desc="Locate and extract Engineer Macallan. Survivor is alive but barricaded."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 5 -->
-<div class="objective-card" data-objective="5" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-05</div>
-        <div class="objective-title">SAVE ENGINEER O'NEIL</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Investigate Engineer O'Neil's PDT location. Survivor may require medical aid.
-        </div>
-        <div class="objective-details">
-            <div class="detail-row">
-                <div class="detail-label">PRIORITY:</div>
-                <div class="priority-high">HIGH</div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Override colony-wide emergency lockdown from Township HQ command center. Current protocols have sealed multiple access points and disabled automated systems. Deactivation required for full colony access and survivor extraction operations.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-critical">CRITICAL</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Command Room - Level 1</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">REQUIREMENTS:</div>
+                        <div>Access to Level 1 / Command terminal</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">UNLOCKS:</div>
+                        <div>Full colony access / Door systems</div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="SAVE ENGINEER O'NEIL"
-        data-desc="Investigate Engineer O'Neil's PDT location and extract if viable."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 6 -->
-<div class="objective-card" data-objective="6" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-06</div>
-        <div class="objective-title">SAVE SECURITY GUARD TORRANCE</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Locate Security Guard Torrance. Survivor is likely secured in holding cells.
+        
+        <div class="divider"></div>
+        <div class="section-header">SURVIVOR EXTRACTION OBJECTIVES</div>
+        
+        <!-- OBJECTIVE 4 -->
+        <div class="objective-card" data-objective="4" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-04</div>
+                <div class="objective-title">SAVE ENGINEER MACALLAN</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Locate and extract Engineer Macallan from sealed room. PDT signal indicates survivor is alive but barricaded. Individual may be traumatized - approach with caution. Possess technical skills that may prove useful for mission objectives.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Ground Level - Eastern Section</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">STATUS:</div>
+                        <div>PDT Active / Alive</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">SPECIALIST:</div>
+                        <div>Engineering / Technical Systems</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="SAVE SECURITY GUARD TORRANCE"
-        data-desc="Locate and extract Security Guard Torrance from the holding cells."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 7 -->
-<div class="objective-card" data-objective="7" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-07</div>
-        <div class="objective-title">SAVE VETERINARIAN McNEIL</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Extract Veterinarian McNeil from sealed veterinary clinic. Survivor alive and secured.
+        
+        <!-- OBJECTIVE 5 -->
+        <div class="objective-card" data-objective="5" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-05</div>
+                <div class="objective-title">SAVE ENGINEER O'NEIL</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Investigate Engineer O'Neil's PDT signal location. Last known position in medical area, Level 1. Status uncertain - signal weak but present. Assess survivor condition and render medical aid if possible. Extract if viable.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Level 1 - Medical Wing</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">STATUS:</div>
+                        <div>PDT Active / Condition Unknown</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">SPECIALIST:</div>
+                        <div>Engineering / Maintenance</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="SAVE VETERINARIAN McNEIL"
-        data-desc="Extract Veterinarian McNeil from the sealed veterinary clinic."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 8 -->
-<div class="objective-card" data-objective="8" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-08</div>
-        <div class="objective-title">SAVE TECHNICIAN CARMICHAEL</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Locate Technician Carmichael. Survivor stationary for extended period.
+        
+        <!-- OBJECTIVE 6 -->
+        <div class="objective-card" data-objective="6" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-06</div>
+                <div class="objective-title">SAVE SECURITY GUARD TORRANCE</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Locate Security Guard Torrance in jail cell area. PDT signal strong - survivor likely secured in holding cells. Possess security clearances and knowledge of colony defense systems that may assist operations. Priority extraction.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Jail Cells - Ground Level</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">STATUS:</div>
+                        <div>PDT Active / Secured Location</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">SPECIALIST:</div>
+                        <div>Security Systems / Colony Defense</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="SAVE TECHNICIAN CARMICHAEL"
-        data-desc="Locate and extract Technician Carmichael. Survivor has not moved for an extended time."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 10 -->
-<div class="objective-card" data-objective="10" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-10</div>
-        <div class="objective-title">SAVE BIOLOGIST EVERLY</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Investigate Biologist Everly's PDT location. Survivor has research background.
+        
+        <!-- OBJECTIVE 7 -->
+        <div class="objective-card" data-objective="7" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-07</div>
+                <div class="objective-title">SAVE VETERINARIAN McNEIL</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Extract Veterinarian McNeil from sealed veterinary clinic. PDT indicates survivor is alive and in secured airlock area. Possess medical training and biological expertise. Exercise caution with decontamination systems during extraction.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Veterinary Clinic - Ground Level</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">STATUS:</div>
+                        <div>PDT Active / Sealed Environment</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">SPECIALIST:</div>
+                        <div>Medical / Biological Sciences</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="SAVE BIOLOGIST EVERLY"
-        data-desc="Locate and extract Biologist Everly from northern building complex."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
-<div class="divider"></div>
-<div class="section-header">INVESTIGATION OBJECTIVES</div>
-
-<!-- OBJECTIVE 9 -->
-<div class="objective-card" data-objective="9" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-09</div>
-        <div class="objective-title">FIND THE SOURCE OF THE INFESTATION</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Determine origin point of colony emergency. Access surveillance systems for threat verification.
+        
+        <!-- OBJECTIVE 8 -->
+        <div class="objective-card" data-objective="8" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-08</div>
+                <div class="objective-title">SAVE TECHNICIAN CARMICHAEL</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Locate Technician Carmichael in northeastern building complex. PDT signal active but stationary for extended period. Assess survivor condition. Technical specialist with maintenance expertise - valuable for colony systems restoration.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Northeast Building - Ground Level</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">STATUS:</div>
+                        <div>PDT Active / No Movement</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">SPECIALIST:</div>
+                        <div>Maintenance / Technical Systems</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="FIND THE SOURCE OF THE INFESTATION"
-        data-desc="Determine the origin point of the colony emergency and assess the threat."
-        data-priority="CRITICAL">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 11 -->
-<div class="objective-card" data-objective="11" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-11</div>
-        <div class="objective-title">INVESTIGATE THE SUSPICIOUS CONTAINER</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Investigate anomalous container in Slaughterhouse facility. Area shows signs of disturbance.
+        
+        <!-- OBJECTIVE 10 -->
+        <div class="objective-card" data-objective="10" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-10</div>
+                <div class="objective-title">SAVE BIOLOGIST EVERLY</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Investigate Biologist Everly's PDT location in northern building complex. Scientific specialist with research background. Status uncertain - approach with standard rescue protocols. May have valuable information about colony situation.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Northern Complex - Ground Level</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">STATUS:</div>
+                        <div>PDT Active / Location Confirmed</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">SPECIALIST:</div>
+                        <div>Biology / Research Science</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="INVESTIGATE THE SUSPICIOUS CONTAINER"
-        data-desc="Investigate the anomalous container in the Slaughterhouse facility."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 12 -->
-<div class="objective-card" data-objective="12" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-12</div>
-        <div class="objective-title">FIND MATERIALS FOR THE OTAGO</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Locate and secure critical supplies for Otago operations.
+        
+        <div class="divider"></div>
+        <div class="section-header">INVESTIGATION OBJECTIVES</div>
+        
+        <!-- OBJECTIVE 9 -->
+        <div class="objective-card" data-objective="9" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-09</div>
+                <div class="objective-title">FIND THE SOURCE OF THE INFESTATION</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Determine origin point of colony emergency. Access surveillance systems to identify what triggered lockdown protocols. Investigation critical for understanding threat and preventing recurrence. Command requires comprehensive report.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-critical">CRITICAL</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Server Room / Surveillance Hub</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">REQUIREMENTS:</div>
+                        <div>System access / Investigation</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">UNLOCKS:</div>
+                        <div>Source location / Threat assessment</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="FIND MATERIALS FOR THE OTAGO"
-        data-desc="Locate and secure supplies for Otago operations."
-        data-priority="STANDARD">Push to MU/TH/UR</button>
-</div>
-
-<div class="divider"></div>
-<div class="section-header">SECONDARY OBJECTIVES</div>
-
-<!-- OBJECTIVE 13 -->
-<div class="objective-card" data-objective="13" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-13</div>
-        <div class="objective-title">FIND THE COLONISTS IN THE OLD MINE</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Multiple PDT signals detected in old mining complex. Colonists may have sought refuge there.
+        
+        <!-- OBJECTIVE 11 -->
+        <div class="objective-card" data-objective="11" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-11</div>
+                <div class="objective-title">INVESTIGATE THE SUSPICIOUS CONTAINER</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Surveillance feeds indicate anomalous container in Slaughterhouse facility. Investigate container origin and contents. May be connected to colony emergency. Exercise extreme caution - area shows signs of significant disturbance.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Slaughterhouse - Main Processing Room</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">REQUIREMENTS:</div>
+                        <div>Objective 09 completion / Access route</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">WARNING:</div>
+                        <div style="color: #ff4400;">High threat area - proceed with caution</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="FIND THE COLONISTS IN THE OLD MINE"
-        data-desc="Investigate PDT signals in the old mining complex and locate colonists."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
-<!-- OBJECTIVE 14 -->
-<div class="objective-card" data-objective="14" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
-    <div class="objective-header">
-        <div class="objective-number">OBJ-14</div>
-        <div class="objective-title">SAVE VETERINARIAN T. McNEIL</div>
-        <div class="objective-status status-pending">PENDING</div>
-    </div>
-    <div class="objective-body">
-        <div class="objective-description">
-            Secondary PDT signal detected for Veterinarian McNeil. Possible equipment malfunction or movement.
+        
+        <!-- OBJECTIVE 12 -->
+        <div class="objective-card" data-objective="12" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-12</div>
+                <div class="objective-title">FIND MATERIALS FOR THE OTAGO</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Locate and secure critical supplies for Otago operations. Intelligence suggests stockpiled resources in colony warehouses and storage facilities. Materials will support extended operations and survivor care. Secondary priority but valuable.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-standard">STANDARD</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Warehouse / Power Complex</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">REQUIREMENTS:</div>
+                        <div>Investigation / Cargo recovery</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">YIELD:</div>
+                        <div>Medical supplies / Equipment / Ammunition</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <button 
-        class="pushToMother"
-        data-title="SAVE VETERINARIAN T. McNEIL"
-        data-desc="Investigate and extract Veterinarian T. McNeil from deep mine system."
-        data-priority="HIGH">Push to MU/TH/UR</button>
-</div>
-
+        
+        <div class="divider"></div>
+        <div class="section-header">SECONDARY OBJECTIVES</div>
+        
+        <!-- OBJECTIVE 13 -->
+        <div class="objective-card" data-objective="13" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-13</div>
+                <div class="objective-title">FIND THE COLONISTS IN THE OLD MINE</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Multiple colonist PDT signals detected in old mining complex beneath colony. Investigation required. Colonists may have sought refuge in deep mining tunnels. Access via mine elevator system. Prepare for underground operations.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Mines Level -1 / Deep Tunnels</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">REQUIREMENTS:</div>
+                        <div>Mine access / Underground operations</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">WARNING:</div>
+                        <div style="color: #ff4400;">Unstable shafts - hazardous environment</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- OBJECTIVE 14 -->
+        <div class="objective-card" data-objective="14" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+            <div class="objective-header">
+                <div class="objective-number">OBJ-14</div>
+                <div class="objective-title">SAVE VETERINARIAN T. McNEIL</div>
+                <div class="objective-status status-pending">PENDING</div>
+            </div>
+            <div class="objective-body">
+                <div class="objective-description">
+                    Secondary PDT signal identified for Veterinarian McNeil in deep mine system. Signal separated from primary location. Investigate discrepancy. May indicate survivor movement or equipment malfunction. Assessment required.
+                </div>
+                <div class="objective-details">
+                    <div class="detail-row">
+                        <div class="detail-label">PRIORITY:</div>
+                        <div class="priority-high">HIGH</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">LOCATION:</div>
+                        <div>Mines Level -1 - Deep Section</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">STATUS:</div>
+                        <div>PDT Active / Location Anomalous</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">REQUIREMENTS:</div>
+                        <div>Objective 13 progress / Deep mine access</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="divider"></div>
         
         <div class="note-box">
@@ -906,49 +1011,6 @@
             document.getElementById('survivors-counter').textContent = survivors;
         }
     </script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAn3oG0z19XbBqy5nzwhCtsqK64rNDeJQA",
-  authDomain: "muthr6000.firebaseapp.com",
-  databaseURL: "https://muthr6000-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "muthr6000",
-  storageBucket: "muthr6000.firebasestorage.app",
-  messagingSenderId: "483667325658",
-  appId: "1:483667325658:web:e79eef575c1586cc456be3",
-  measurementId: "G-F4LZB5JF9T"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-function pushObjectiveToMother(title, description, priority) {
-  const newRef = push(ref(db, "objectives"));
-  set(newRef, {
-    title,
-    description,
-    priority,
-    timestamp: Date.now(),
-    status: "active",
-    announced: false
-  })
-  .then(() => alert("Objective sent to MU/TH/UR"))
-  .catch(() => alert("Transmission failed"));
-}
-
-document.querySelectorAll(".pushToMother").forEach(btn => {
-  btn.addEventListener("click", () => {
-    pushObjectiveToMother(
-      btn.dataset.title,
-      btn.dataset.desc,
-      btn.dataset.priority
-    );
-  });
-});
-</script>
-
 </body>
 </html>
                 
