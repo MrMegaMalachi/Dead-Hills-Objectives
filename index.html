@@ -507,7 +507,7 @@
                 <div class="objective-description">
                     Restore satellite communications array to full operational status. This will enable Hayes to access colony systems, track survivor PDT signals, and maintain command link with Otago. Communications blackout must be resolved before full assessment possible.
                 </div>
-                <div class="objective-details">
+            <div class="objective-details">
                     <div class="detail-row">
                         <div class="detail-label">PRIORITY:</div>
                         <div class="priority-critical">CRITICAL</div>
@@ -977,11 +977,12 @@ const motherObjectivesRef = ref(db, 'objectives');
 const allCards = document.querySelectorAll('.objective-card');
 
 // ---------------------------------------------------
-// MU/TH/UR PUSH/REMOVE FUNCTIONS (With Robust De-duplication)
+// MU/TH/UR PUSH/REMOVE FUNCTIONS (With Aggressive De-duplication Fix)
 // ---------------------------------------------------
 
 /**
- * Pushes or Updates the objective in the 'objectives' list (for the other repo)
+ * DE-DUPLICATION FIX: Aggressively removes all existing entries for the title, 
+ * then pushes a single, clean entry. This prevents race conditions and lingering duplicates.
  */
 async function sendObjectiveToMother(card) {
     const title = card.querySelector(".objective-title").innerText.trim();
@@ -996,31 +997,32 @@ async function sendObjectiveToMother(card) {
         title: title,
         number: objectiveNumber,
         description: description.substring(0, 100) + '...', 
-        priority: priority, // Now correctly included
+        priority: priority, 
         timestamp: Date.now(),
         status: "active",
         announced: false
     };
 
-    // 1. Check if it already exists before pushing
+    // 1. Prepare the query to find any existing entries (including historical duplicates)
     const q = query(motherObjectivesRef, orderByChild("title"), equalTo(title));
     const snap = await get(q);
 
-    if (!snap.exists()) {
-        // If it doesn't exist, push a new unique entry
-        await push(motherObjectivesRef, newObjective);
-        console.log("Pushed new unique objective to MU/TH/UR:", newObjective.title, "with Priority:", priority);
-    } else {
-        // If it DOES exist, find the first key and update the existing entry. 
-        // This ensures de-duplication: it updates the status of the existing record instead of adding a new one.
-        const existingKey = Object.keys(snap.val())[0];
-        await set(ref(db, `objectives/${existingKey}`), newObjective);
-        console.log("Updated existing active objective in MU/TH/UR (De-duplication success).");
+    // 2. AGGRESSIVE CLEANUP: If any existing entries are found, delete ALL of them.
+    if (snap.exists()) {
+        Object.keys(snap.val()).forEach(key => {
+            remove(ref(db, "objectives/" + key));
+        });
+        console.log("Aggressively cleaned up existing duplicates for:", title);
     }
+    
+    // 3. PUSH the single, clean, new entry.
+    await push(motherObjectivesRef, newObjective);
+    console.log("Pushed new unique objective to MU/TH/UR:", newObjective.title, "with Priority:", priority);
 }
 
 /**
- * Clears the objective from the 'objectives' list (for the other repo)
+ * Clears the objective from the 'objectives' list (for the other repo).
+ * This function also removes all duplicates found for the specific title.
  */
 async function clearObjectiveFromMother(card) {
     const title = card.querySelector(".objective-title").innerText.trim();
@@ -1029,7 +1031,7 @@ async function clearObjectiveFromMother(card) {
     const snap = await get(q);
 
     if (snap.exists()) {
-        // Iterate through all matches and remove them (in case of historical duplicates)
+        // Iterate through all matches and remove them (final cleanup)
         Object.keys(snap.val()).forEach(key => {
             remove(ref(db, "objectives/" + key));
         });
@@ -1117,7 +1119,7 @@ async function cycleStatus(e) {
     // 1. MU/TH/UR INTEGRATION LOGIC (ONLY for the CLICKED card)
     // ---------------------------------------------------
     if (newStatus === 'active') {
-        // PUSH/UPDATE to MU/TH/UR's 'objectives/' path
+        // Aggressively clean up and push the active status
         sendObjectiveToMother(card);
     } else if (currentStatus === 'active' && (newStatus === 'completed' || newStatus === 'pending')) {
         // REMOVE from MU/TH/UR's 'objectives/' path when it moves away from active
