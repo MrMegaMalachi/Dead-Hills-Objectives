@@ -1011,6 +1011,91 @@
             document.getElementById('survivors-counter').textContent = survivors;
         }
     </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, push, set, remove, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAn3oG0z19XbBqy5nzwhCtsqK64rNDeJQA",
+  authDomain: "muthr6000.firebaseapp.com",
+  databaseURL: "https://muthr6000-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "muthr6000",
+  storageBucket: "muthr6000.firebasestorage.app",
+  messagingSenderId: "483667325658",
+  appId: "1:483667325658:web:e79eef575c1586cc456be3",
+  measurementId: "G-F4LZB5JF9T"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+
+// ---------------------------------------------------
+// ⭐ SEND OBJECTIVE TO MU/TH/UR
+// ---------------------------------------------------
+async function sendObjectiveToMother(card) {
+  const title = card.querySelector(".objective-title").innerText.trim();
+  const desc = card.querySelector(".objective-description").innerText.trim();
+  const priority = card.querySelector("[class*='priority']").innerText.trim().toUpperCase();
+
+  const newObjective = {
+    title,
+    description: desc,
+    priority,
+    timestamp: Date.now(),
+    status: "active",
+    announced: false
+  };
+
+  await push(ref(db, "objectives"), newObjective);
+  console.log("Pushed to MU/TH/UR:", newObjective);
+}
+
+
+// ---------------------------------------------------
+// ⭐ REMOVE OBJECTIVE FROM MU/TH/UR
+// ---------------------------------------------------
+async function clearObjectiveFromMother(card) {
+  const title = card.querySelector(".objective-title").innerText.trim();
+
+  const q = query(ref(db, "objectives"), orderByChild("title"), equalTo(title));
+  const snap = await get(q);
+
+  if (snap.exists()) {
+    Object.keys(snap.val()).forEach(key => {
+      remove(ref(db, "objectives/" + key));
+    });
+
+    console.log("Cleared from MU/TH/UR:", title);
+  }
+}
+
+
+// ---------------------------------------------------
+// ⭐ MODIFY cycleStatus() TO TRIGGER PUSH / REMOVE
+// ---------------------------------------------------
+
+window.cycleStatus = function(card) {
+  const current = card.getAttribute("data-status");
+  let next = "pending";
+
+  if (current === "pending") next = "active";
+  else if (current === "active") next = "completed";
+  else if (current === "completed") next = "pending";
+
+  card.setAttribute("data-status", next);
+  card.querySelector(".objective-status").innerText = next.toUpperCase();
+
+  // 🔥 NEW BEHAVIOUR:
+  if (next === "active") {
+    sendObjectiveToMother(card);
+  }
+  else if (next === "completed") {
+    clearObjectiveFromMother(card);
+  }
+};
+</script>
+
 </body>
 </html>
                 
