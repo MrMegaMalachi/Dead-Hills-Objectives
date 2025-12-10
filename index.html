@@ -1035,12 +1035,15 @@ async function sendObjectiveToMother(card) {
     };
 
     const objectiveKeyRef = ref(motherObjectivesRef, objectiveNumber);
-    try {
-        await set(objectiveKeyRef, newObjective);
-        console.log("SET new unique objective to MU/TH/UR with stable key:", objectiveNumber);
-    } catch(error) {
-        console.error("Failed to SET objective to Mother App DB:", error);
-    }
+    // Return the promise so it can be awaited by Promise.all
+    return set(objectiveKeyRef, newObjective)
+        .then(() => {
+            console.log("SUCCESS: SET new unique objective to MU/TH/UR with stable key:", objectiveNumber);
+        })
+        .catch(error => {
+            console.error("FAILURE: Failed to SET objective to Mother App DB:", error);
+            throw error; // Re-throw to be caught by Promise.all
+        });
 }
 
 /**
@@ -1050,12 +1053,15 @@ async function clearObjectiveFromMother(card) {
     const objectiveNumber = card.querySelector(".objective-number").innerText.trim(); // e.g., "OBJ-01"
 
     const objectiveKeyRef = ref(motherObjectivesRef, objectiveNumber);
-    try {
-        await remove(objectiveKeyRef);
-        console.log("REMOVED objective from MU/TH/UR using stable key:", objectiveNumber);
-    } catch(error) {
-        console.error("Failed to REMOVE objective from Mother App DB:", error);
-    }
+    // Return the promise so it can be awaited by Promise.all
+    return remove(objectiveKeyRef)
+        .then(() => {
+            console.log("SUCCESS: REMOVED objective from MU/TH/UR using stable key:", objectiveNumber);
+        })
+        .catch(error => {
+            console.error("FAILURE: Failed to REMOVE objective from Mother App DB:", error);
+            throw error; // Re-throw to be caught by Promise.all
+        });
 }
 
 // ---------------------------------------------------
@@ -1158,7 +1164,7 @@ function updateUI(statuses) {
 
 /**
  * Cycles the status of a single card, updates the local UI immediately,
- * and then pushes the new state to Firebase asynchronously.
+ * and then pushes the new state to Firebase asynchronously using Promise.all.
  */
 async function cycleStatus(e) {
     const card = e.currentTarget;
@@ -1174,7 +1180,7 @@ async function cycleStatus(e) {
         newStatus = 'pending';
     }
 
-    // 2. Build the full state payload (for local update and persistence)
+    // 2. Build the full state payload for all objectives (for local update and persistence)
     const currentStatuses = {};
     allCards.forEach(c => {
         const objectiveNumber = c.dataset.objective;
@@ -1187,23 +1193,29 @@ async function cycleStatus(e) {
     updateUI(currentStatuses);
 
     // ---------------------------------------------------
-    // 3. ASYNCHRONOUS DATABASE WRITES
+    // 3. ATOMIC ASYNCHRONOUS DATABASE WRITES
     // ---------------------------------------------------
     
-    // MU/TH/UR INTEGRATION LOGIC (Updates player app's 'objectives' list)
+    const dbWrites = [];
+    
+    // a) Add the objective status master list update
+    dbWrites.push(set(statusesRef, currentStatuses));
+    
+    // b) Add the Mother App 'objectives' list update (conditional on status)
     if (newStatus === 'active') {
-        await sendObjectiveToMother(card); 
+        dbWrites.push(sendObjectiveToMother(card)); 
     } else if (currentStatus === 'active' && (newStatus === 'completed' || newStatus === 'pending')) {
-        await clearObjectiveFromMother(card); 
+        dbWrites.push(clearObjectiveFromMother(card)); 
     }
-
-    // PERSISTENCE LOGIC (Saves all 14 objectives state to 'dead_hills_objective_statuses')
+    
+    // Execute all writes concurrently and catch any failure
     try {
-        await set(statusesRef, currentStatuses);
-        console.log(`Objective ${card.querySelector('.objective-number').innerText} status saved to DB as ${newStatus}.`);
+        await Promise.all(dbWrites);
+        console.log(`Objective ${card.querySelector('.objective-number').innerText} status saved and synced.`);
     } catch(error) {
-        console.error("Failed to update main status Firebase. Check connection/permissions:", error);
-        alert("CRITICAL ERROR: Failed to save status to database. Please check console and connection.");
+        console.error("CRITICAL ERROR: Database write failed during sync. See above for details.", error);
+        // The error will now contain the failure from whichever function (send/clear/set) failed.
+        alert("CRITICAL ERROR: Failed to save status to database. Please check the browser's console (F12) for details on the Mother App write failure.");
     }
 }
 
