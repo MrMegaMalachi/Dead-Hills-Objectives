@@ -1105,7 +1105,7 @@ async function clearAllMotherObjectives() {
 // ---------------------------------------------------
 
 /**
- * Updates the UI based on the statuses received from Firebase.
+ * Updates the UI based on the statuses map.
  */
 function updateUI(statuses) {
     let completedCount = 0;
@@ -1116,7 +1116,7 @@ function updateUI(statuses) {
         const objectiveNumber = card.dataset.objective; 
         const statusKey = `OBJ-${objectiveNumber.padStart(2, '0')}`;
         
-        // Get the status from the database. If not found, use the status defined in the HTML's data-attribute.
+        // Get the status from the database. If not found, fall back to the local data-attribute.
         const newStatus = statuses && statuses[statusKey] ? statuses[statusKey] : card.dataset.status;
 
         const statusElement = card.querySelector('.objective-status');
@@ -1157,13 +1157,14 @@ function updateUI(statuses) {
 
 
 /**
- * Cycles the status of a single card and pushes the full state to Firebase.
+ * Cycles the status of a single card, updates the local UI immediately,
+ * and then pushes the new state to Firebase asynchronously.
  */
 async function cycleStatus(e) {
     const card = e.currentTarget;
     const currentStatus = card.dataset.status;
     
-    // Determine the next status in the sequence
+    // 1. Determine the next status in the sequence
     let newStatus;
     if (currentStatus === 'pending') {
         newStatus = 'active';
@@ -1173,22 +1174,8 @@ async function cycleStatus(e) {
         newStatus = 'pending';
     }
 
-    // ---------------------------------------------------
-    // 1. MU/TH/UR INTEGRATION LOGIC (For player app)
-    // ---------------------------------------------------
-    if (newStatus === 'active') {
-        await sendObjectiveToMother(card);
-    } else if (currentStatus === 'active' && (newStatus === 'completed' || newStatus === 'pending')) {
-        await clearObjectiveFromMother(card);
-    }
-    // ---------------------------------------------------
-
-
-    // ---------------------------------------------------
-    // 2. PERSISTENCE AND LOCAL UI REFRESH LOGIC
-    // ---------------------------------------------------
+    // 2. Build the full state payload (for local update and persistence)
     const currentStatuses = {};
-    // Iterate over all cards to build the complete state payload
     allCards.forEach(c => {
         const objectiveNumber = c.dataset.objective;
         const statusKey = `OBJ-${objectiveNumber.padStart(2, '0')}`;
@@ -1196,17 +1183,26 @@ async function cycleStatus(e) {
         currentStatuses[statusKey] = c === card ? newStatus : c.dataset.status;
     });
 
-    // Push the complete, updated state to Firebase (triggers persistence and real-time sync)
+    // ⭐ FIX: Immediately update the UI locally for responsiveness
+    updateUI(currentStatuses);
+
+    // ---------------------------------------------------
+    // 3. ASYNCHRONOUS DATABASE WRITES
+    // ---------------------------------------------------
+    
+    // MU/TH/UR INTEGRATION LOGIC (Updates player app's 'objectives' list)
+    if (newStatus === 'active') {
+        await sendObjectiveToMother(card); 
+    } else if (currentStatus === 'active' && (newStatus === 'completed' || newStatus === 'pending')) {
+        await clearObjectiveFromMother(card); 
+    }
+
+    // PERSISTENCE LOGIC (Saves all 14 objectives state to 'dead_hills_objective_statuses')
     try {
         await set(statusesRef, currentStatuses);
-        console.log(`Objective ${card.querySelector('.objective-number').innerText} status updated to ${newStatus}. State saved and synced.`);
-
-        // ⭐ FIX: Immediately trigger the UI update locally after a successful database write.
-        // This ensures the GM terminal is responsive without waiting for the listener round-trip.
-        updateUI(currentStatuses);
-        
+        console.log(`Objective ${card.querySelector('.objective-number').innerText} status saved to DB as ${newStatus}.`);
     } catch(error) {
-        console.error("Failed to update main status Firebase:", error);
+        console.error("Failed to update main status Firebase. Check connection/permissions:", error);
         alert("CRITICAL ERROR: Failed to save status to database. Please check console and connection.");
     }
 }
@@ -1220,12 +1216,10 @@ async function cycleStatus(e) {
  * Initializes the Firebase listener and sets up click handlers.
  */
 function init() {
-    // 1. Set up Real-Time Listener (Handles persistence and multi-user sync for *other* users)
+    // 1. Set up Real-Time Listener (Handles persistence and multi-user sync for *other* users/windows)
     onValue(statusesRef, (snapshot) => {
         const statuses = snapshot.val();
         if (statuses) {
-            // Note: This function updates the UI. It will fire locally when you click a card,
-            // but the manual call in cycleStatus is for immediate local responsiveness.
             updateUI(statuses); 
         } 
     }, (error) => {
