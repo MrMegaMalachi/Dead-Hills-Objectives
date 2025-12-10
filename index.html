@@ -300,6 +300,34 @@
             margin-bottom: 25px;
             letter-spacing: 3px;
         }
+
+        /* NEW STYLE FOR CLEAR BUTTON */
+        #clear-db-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #ff4400;
+            color: #000;
+            border: 2px solid #ff0000;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 0 10px rgba(255, 68, 0, 0.5);
+        }
+        
+        #clear-db-button:hover {
+            background: #ff0000;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        }
+
+        #clear-db-button:active {
+            background: #cc0000;
+        }
         
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
@@ -315,6 +343,14 @@
                 font-size: 1.3em;
                 letter-spacing: 4px;
             }
+            
+            #clear-db-button {
+                font-size: 0.9em;
+                padding: 12px;
+                letter-spacing: 1px;
+            }
+
+            /* ... rest of your existing media queries ... */
             
             .header .subline {
                 font-size: 0.7em;
@@ -442,6 +478,8 @@
             <div class="subline">SEARCH AND RESCUE PROTOCOLS</div>
         </div>
         
+        <button id="clear-db-button">CLEAR ACTIVE OBJECTIVES DATABASE (1-TIME FIX)</button>
+
         <div class="status-bar">
             <div class="status-item">
                 <div class="status-label">MISSION STATUS</div>
@@ -947,12 +985,8 @@ import {
     ref, 
     set, 
     onValue, 
-    get, 
-    push, 
     remove, 
-    query, 
-    orderByChild, 
-    equalTo 
+    get
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 // ⭐ 1. YOUR FIREBASE CONFIGURATION 
@@ -975,19 +1009,20 @@ const statusesRef = ref(db, 'dead_hills_objective_statuses');
 const motherObjectivesRef = ref(db, 'objectives'); 
 
 const allCards = document.querySelectorAll('.objective-card');
+const clearDbButton = document.getElementById('clear-db-button');
 
 // ---------------------------------------------------
-// MU/TH/UR PUSH/REMOVE FUNCTIONS (With Aggressive De-duplication Fix)
+// MU/TH/UR PUSH/REMOVE FUNCTIONS (Stable Key Strategy)
 // ---------------------------------------------------
 
 /**
- * DE-DUPLICATION FIX: Aggressively removes all existing entries for the title, 
- * then pushes a single, clean entry. This prevents race conditions and lingering duplicates.
+ * Pushes or UPDATES the objective in the 'objectives' list using the objective number as the stable key.
+ * This sends a single SET event to the player app's listener, eliminating duplication issues.
  */
 async function sendObjectiveToMother(card) {
+    const objectiveNumber = card.querySelector(".objective-number").innerText.trim(); // e.g., "OBJ-01"
     const title = card.querySelector(".objective-title").innerText.trim();
     const description = card.querySelector(".objective-description").innerText.trim();
-    const objectiveNumber = card.querySelector(".objective-number").innerText.trim();
     
     // Find the priority text using a class attribute selector
     const priorityElement = card.querySelector('.objective-details div[class*="priority-"]');
@@ -1003,41 +1038,70 @@ async function sendObjectiveToMother(card) {
         announced: false
     };
 
-    // 1. Prepare the query to find any existing entries (including historical duplicates)
-    const q = query(motherObjectivesRef, orderByChild("title"), equalTo(title));
-    const snap = await get(q);
-
-    // 2. AGGRESSIVE CLEANUP: If any existing entries are found, delete ALL of them.
-    if (snap.exists()) {
-        Object.keys(snap.val()).forEach(key => {
-            remove(ref(db, "objectives/" + key));
-        });
-        console.log("Aggressively cleaned up existing duplicates for:", title);
+    // Use SET with the objectiveNumber as the fixed key
+    const objectiveKeyRef = ref(motherObjectivesRef, objectiveNumber);
+    try {
+        await set(objectiveKeyRef, newObjective);
+        console.log("SET new unique objective to MU/TH/UR with stable key:", objectiveNumber);
+    } catch(error) {
+        console.error("Failed to SET objective to Mother App DB:", error);
     }
-    
-    // 3. PUSH the single, clean, new entry.
-    await push(motherObjectivesRef, newObjective);
-    console.log("Pushed new unique objective to MU/TH/UR:", newObjective.title, "with Priority:", priority);
 }
 
 /**
- * Clears the objective from the 'objectives' list (for the other repo).
- * This function also removes all duplicates found for the specific title.
+ * Clears the objective from the 'objectives' list using the objective number as the stable key.
  */
 async function clearObjectiveFromMother(card) {
-    const title = card.querySelector(".objective-title").innerText.trim();
+    const objectiveNumber = card.querySelector(".objective-number").innerText.trim(); // e.g., "OBJ-01"
 
-    const q = query(motherObjectivesRef, orderByChild("title"), equalTo(title));
-    const snap = await get(q);
+    // Use REMOVE on the fixed key
+    const objectiveKeyRef = ref(motherObjectivesRef, objectiveNumber);
+    try {
+        await remove(objectiveKeyRef);
+        console.log("REMOVED objective from MU/TH/UR using stable key:", objectiveNumber);
+    } catch(error) {
+        console.error("Failed to REMOVE objective from Mother App DB:", error);
+    }
+}
 
-    if (snap.exists()) {
-        // Iterate through all matches and remove them (final cleanup)
-        Object.keys(snap.val()).forEach(key => {
-            remove(ref(db, "objectives/" + key));
-        });
-        console.log("Cleared from MU/TH/UR:", title);
-    } else {
-        console.log("Objective not found in MU/TH/UR to clear.");
+// ---------------------------------------------------
+// 🔥 NEW: ONE-TIME CLEANUP FUNCTION
+// ---------------------------------------------------
+
+/**
+ * CLEARS ALL data under the /objectives path. This is a one-time operation
+ * to eliminate legacy duplicates from previous implementation attempts.
+ */
+async function clearAllMotherObjectives() {
+    clearDbButton.textContent = 'CLEANING IN PROGRESS... DO NOT INTERRUPT';
+    clearDbButton.disabled = true;
+
+    try {
+        // Fetch ALL objectives (both fixed keys and old random keys)
+        const snapshot = await get(motherObjectivesRef);
+        const objectivesData = snapshot.val();
+        
+        if (objectivesData) {
+            const keys = Object.keys(objectivesData);
+            let count = 0;
+            
+            // Delete the entire collection path to ensure a clean slate
+            await remove(motherObjectivesRef);
+            
+            console.warn(`SUCCESS: Cleared all ${keys.length} entries from /objectives to fix legacy duplication issue.`);
+            clearDbButton.textContent = 'DATABASE CLEANUP COMPLETE. OBJECTIVES ARE NOW STABLE.';
+            clearDbButton.style.backgroundColor = '#008000'; // Green success color
+
+        } else {
+            clearDbButton.textContent = 'DATABASE WAS ALREADY CLEAN.';
+            clearDbButton.style.backgroundColor = '#008000';
+        }
+        
+    } catch(error) {
+        console.error("FATAL ERROR DURING CLEANUP:", error);
+        clearDbButton.textContent = 'CLEANUP FAILED. CHECK CONSOLE.';
+        clearDbButton.style.backgroundColor = '#cc0000';
+        clearDbButton.disabled = false;
     }
 }
 
@@ -1116,14 +1180,14 @@ async function cycleStatus(e) {
     }
 
     // ---------------------------------------------------
-    // 1. MU/TH/UR INTEGRATION LOGIC (ONLY for the CLICKED card)
+    // 1. MU/TH/UR INTEGRATION LOGIC
     // ---------------------------------------------------
     if (newStatus === 'active') {
-        // Aggressively clean up and push the active status
-        sendObjectiveToMother(card);
+        // Use SET (Update/Create) on the fixed key: OBJ-XX
+        await sendObjectiveToMother(card);
     } else if (currentStatus === 'active' && (newStatus === 'completed' || newStatus === 'pending')) {
-        // REMOVE from MU/TH/UR's 'objectives/' path when it moves away from active
-        clearObjectiveFromMother(card);
+        // Use REMOVE on the fixed key: OBJ-XX
+        await clearObjectiveFromMother(card);
     }
     // ---------------------------------------------------
 
@@ -1172,6 +1236,9 @@ function init() {
     allCards.forEach(card => {
         card.addEventListener('click', cycleStatus);
     });
+
+    // 3. Set up Click Handler for the cleanup button
+    clearDbButton.addEventListener('click', clearAllMotherObjectives);
 }
 
 init();
