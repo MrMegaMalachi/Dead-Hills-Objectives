@@ -1003,7 +1003,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 // Persistent status location for all 14 objectives
 const statusesRef = ref(db, 'dead_hills_objective_statuses'); 
-// Original "Mother" objective list location for active missions
+// Original "Mother" objective list location for active missions (Used for cleanup only now)
 const motherObjectivesRef = ref(db, 'objectives'); 
 
 const allCards = document.querySelectorAll('.objective-card');
@@ -1034,7 +1034,9 @@ async function sendObjectiveToMother(card) {
         announced: false
     };
 
-    const objectiveKeyRef = ref(motherObjectivesRef, objectiveNumber);
+    // ⭐ FIX: Use the full path from the root db object to prevent the 'checkNotDeleted' error.
+    const objectiveKeyRef = ref(db, 'objectives/' + objectiveNumber);
+    
     // Return the promise so it can be awaited by Promise.all
     return set(objectiveKeyRef, newObjective)
         .then(() => {
@@ -1052,7 +1054,9 @@ async function sendObjectiveToMother(card) {
 async function clearObjectiveFromMother(card) {
     const objectiveNumber = card.querySelector(".objective-number").innerText.trim(); // e.g., "OBJ-01"
 
-    const objectiveKeyRef = ref(motherObjectivesRef, objectiveNumber);
+    // ⭐ FIX: Use the full path from the root db object to prevent the 'checkNotDeleted' error.
+    const objectiveKeyRef = ref(db, 'objectives/' + objectiveNumber);
+    
     // Return the promise so it can be awaited by Promise.all
     return remove(objectiveKeyRef)
         .then(() => {
@@ -1080,6 +1084,7 @@ async function clearAllMotherObjectives() {
     clearDbButton.disabled = true;
 
     try {
+        // Use the base reference defined globally
         const snapshot = await get(motherObjectivesRef);
         const objectivesData = snapshot.val();
         
@@ -1189,7 +1194,7 @@ async function cycleStatus(e) {
         currentStatuses[statusKey] = c === card ? newStatus : c.dataset.status;
     });
 
-    // ⭐ FIX: Immediately update the UI locally for responsiveness
+    // ⭐ Immediately update the UI locally for responsiveness
     updateUI(currentStatuses);
 
     // ---------------------------------------------------
@@ -1214,8 +1219,7 @@ async function cycleStatus(e) {
         console.log(`Objective ${card.querySelector('.objective-number').innerText} status saved and synced.`);
     } catch(error) {
         console.error("CRITICAL ERROR: Database write failed during sync. See above for details.", error);
-        // The error will now contain the failure from whichever function (send/clear/set) failed.
-        alert("CRITICAL ERROR: Failed to save status to database. Please check the browser's console (F12) for details on the Mother App write failure.");
+        alert("CRITICAL ERROR: Failed to save status to database. Please check the browser's console (F12) for details.");
     }
 }
 
