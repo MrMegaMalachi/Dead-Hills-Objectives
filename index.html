@@ -111,13 +111,7 @@
         }
         
         .objective-card.completed {
-            border-color: #666;
-            opacity: 0.6;
-        }
-        
-        .objective-card.completed:hover {
-            background: rgba(100, 100, 100, 0.1);
-            box-shadow: 0 0 20px rgba(100, 100, 100, 0.2);
+            display: none;
         }
         
         .objective-card.active {
@@ -137,11 +131,6 @@
             padding: 15px 20px;
             border-bottom: 1px solid #00ff41;
             background: rgba(0, 255, 65, 0.05);
-        }
-        
-        .objective-card.completed .objective-header {
-            background: rgba(100, 100, 100, 0.1);
-            border-bottom-color: #666;
         }
         
         .objective-card.active .objective-header {
@@ -200,10 +189,6 @@
             border-left: 3px solid #00ff41;
             padding: 15px;
             margin-top: 15px;
-        }
-        
-        .objective-card.completed .objective-details {
-            border-left-color: #666;
         }
         
         .objective-card.active .objective-details {
@@ -339,11 +324,11 @@
         <div class="section-header">PRIMARY OBJECTIVES</div>
         
         <!-- OBJECTIVE 1 -->
-        <div class="objective-card active" data-objective="1" data-status="active" data-survivor="false" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="1" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-01</div>
                 <div class="objective-title">ENTER DEAD HILLS</div>
-                <div class="objective-status status-active">ACTIVE</div>
+                <div class="objective-status status-pending">PENDING</div>
             </div>
             <div class="objective-body">
                 <div class="objective-description">
@@ -367,7 +352,7 @@
         </div>
         
         <!-- OBJECTIVE 2 -->
-        <div class="objective-card" data-objective="2" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="2" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-02</div>
                 <div class="objective-title">REACTIVATE THE COLONY'S SATCOM</div>
@@ -399,7 +384,7 @@
         </div>
         
         <!-- OBJECTIVE 3 -->
-        <div class="objective-card" data-objective="3" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="3" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-03</div>
                 <div class="objective-title">DEACTIVATE THE EMERGENCY LOCKDOWN</div>
@@ -434,7 +419,7 @@
         <div class="section-header">SURVIVOR EXTRACTION OBJECTIVES</div>
         
         <!-- OBJECTIVE 4 -->
-        <div class="objective-card" data-objective="4" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="4" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-04</div>
                 <div class="objective-title">SAVE ENGINEER MACALLAN</div>
@@ -466,7 +451,7 @@
         </div>
         
         <!-- OBJECTIVE 5 -->
-        <div class="objective-card" data-objective="5" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="5" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-05</div>
                 <div class="objective-title">SAVE ENGINEER O'NEIL</div>
@@ -498,7 +483,7 @@
         </div>
         
         <!-- OBJECTIVE 6 -->
-        <div class="objective-card" data-objective="6" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="6" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-06</div>
                 <div class="objective-title">SAVE SECURITY GUARD TORRANCE</div>
@@ -530,7 +515,7 @@
         </div>
         
         <!-- OBJECTIVE 7 -->
-        <div class="objective-card" data-objective="7" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="7" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-07</div>
                 <div class="objective-title">SAVE VETERINARIAN McNEIL</div>
@@ -562,7 +547,7 @@
         </div>
         
         <!-- OBJECTIVE 8 -->
-        <div class="objective-card" data-objective="8" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="8" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-08</div>
                 <div class="objective-title">SAVE TECHNICIAN CARMICHAEL</div>
@@ -594,7 +579,7 @@
         </div>
         
         <!-- OBJECTIVE 10 -->
-        <div class="objective-card" data-objective="10" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="10" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-10</div>
                 <div class="objective-title">SAVE BIOLOGIST EVERLY</div>
@@ -629,7 +614,7 @@
         <div class="section-header">INVESTIGATION OBJECTIVES</div>
         
         <!-- OBJECTIVE 9 -->
-        <div class="objective-card" data-objective="9" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="9" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-09</div>
                 <div class="objective-title">FIND THE SOURCE OF THE INFESTATION</div>
@@ -661,7 +646,7 @@
         </div>
         
         <!-- OBJECTIVE 11 -->
-        <div class="objective-card" data-objective="11" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="11" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-11</div>
                 <div class="objective-title">INVESTIGATE THE SUSPICIOUS CONTAINER</div>
@@ -693,7 +678,7 @@
         </div>
         
         <!-- OBJECTIVE 12 -->
-        <div class="objective-card" data-objective="12" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="12" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-12</div>
                 <div class="objective-title">FIND MATERIALS FOR THE OTAGO</div>
@@ -728,7 +713,7 @@
         <div class="section-header">SECONDARY OBJECTIVES</div>
         
         <!-- OBJECTIVE 13 -->
-        <div class="objective-card" data-objective="13" data-status="pending" data-survivor="false" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="13" data-status="pending" data-survivor="false">
             <div class="objective-header">
                 <div class="objective-number">OBJ-13</div>
                 <div class="objective-title">FIND THE COLONISTS IN THE OLD MINE</div>
@@ -760,7 +745,7 @@
         </div>
         
         <!-- OBJECTIVE 14 -->
-        <div class="objective-card" data-objective="14" data-status="pending" data-survivor="true" onclick="cycleStatus(this)">
+        <div class="objective-card" data-objective="14" data-status="pending" data-survivor="true">
             <div class="objective-header">
                 <div class="objective-number">OBJ-14</div>
                 <div class="objective-title">SAVE VETERINARIAN T. McNEIL</div>
@@ -820,47 +805,117 @@
         </div>
     </div>
     
-    <script>
-        // Cycle through statuses: pending -> active -> completed -> pending
-        function cycleStatus(card) {
-            const currentStatus = card.dataset.status;
-            const statusElement = card.querySelector('.objective-status');
-            const isSurvivor = card.dataset.survivor === 'true';
-            
-            let newStatus;
-            if (currentStatus === 'pending') {
-                newStatus = 'active';
-            } else if (currentStatus === 'active') {
-                newStatus = 'completed';
-            } else {
-                newStatus = 'pending';
-            }
-            
-            // Update card status
-            card.dataset.status = newStatus;
-            
-            // Remove all status classes
-            card.classList.remove('active', 'completed');
-            statusElement.classList.remove('status-pending', 'status-active', 'status-complete');
-            
-            // Apply new status
-            if (newStatus === 'active') {
-                card.classList.add('active');
-                statusElement.classList.add('status-active');
-                statusElement.textContent = 'ACTIVE';
-            } else if (newStatus === 'completed') {
-                card.classList.add('completed');
-                statusElement.classList.add('status-complete');
-                statusElement.textContent = 'COMPLETE';
-            } else {
-                statusElement.classList.add('status-pending');
-                statusElement.textContent = 'PENDING';
-            }
-            
-            // Update counters
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, push, onValue, set, update, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAn3oG0z19XbBqy5nzwhCtsqK64rNDeJQA",
+            authDomain: "muthr6000.firebaseapp.com",
+            databaseURL: "https://muthr6000-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "muthr6000",
+            storageBucket: "muthr6000.firebasestorage.app",
+            messagingSenderId: "483667325658",
+            appId: "1:483667325658:web:e79eef575c1586cc456be3",
+            measurementId: "G-F4LZB5JF9T"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const objectivesRef = ref(db, 'objectives');
+
+        let localObjectives = {};
+
+        // Extract local objective data
+        document.querySelectorAll('.objective-card').forEach(card => {
+            const id = card.dataset.objective;
+            const title = card.querySelector('.objective-title').textContent.trim();
+            const description = card.querySelector('.objective-description').textContent.trim();
+            const priorityEl = card.querySelector('[class^="priority-"]');
+            const priority = priorityEl ? priorityEl.textContent.trim().toUpperCase() : 'STANDARD';
+            localObjectives[id] = {
+                title,
+                description,
+                priority,
+                survivor: card.dataset.survivor === 'true'
+            };
+        });
+
+        // Listen for changes in Firebase
+        onValue(objectivesRef, (snap) => {
+            const fbObjs = snap.val() || {};
+            Object.entries(localObjectives).forEach(([id, localData]) => {
+                // Find matching objective in Firebase by title
+                const matchingEntry = Object.entries(fbObjs).find(([fbId, fbData]) => fbData.title === localData.title);
+                const card = document.querySelector(`[data-objective="${id}"]`);
+
+                let status = 'pending';
+                if (matchingEntry) {
+                    const [, fbData] = matchingEntry;
+                    status = fbData.status || 'pending';
+                }
+
+                // Update card
+                card.dataset.status = status;
+                card.classList.remove('active', 'completed');
+                const statusElement = card.querySelector('.objective-status');
+                statusElement.classList.remove('status-pending', 'status-active', 'status-complete');
+
+                if (status === 'active') {
+                    card.classList.add('active');
+                    statusElement.classList.add('status-active');
+                    statusElement.textContent = 'ACTIVE';
+                } else if (status === 'completed') {
+                    card.classList.add('completed');
+                    statusElement.classList.add('status-complete');
+                    statusElement.textContent = 'COMPLETE';
+                } else {
+                    statusElement.classList.add('status-pending');
+                    statusElement.textContent = 'PENDING';
+                }
+            });
             updateCounters();
-        }
-        
+        });
+
+        // Cycle status and update Firebase
+        document.querySelectorAll('.objective-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const currentStatus = card.dataset.status;
+                let newStatus;
+                if (currentStatus === 'pending') {
+                    newStatus = 'active';
+                } else if (currentStatus === 'active') {
+                    newStatus = 'completed';
+                } else {
+                    newStatus = 'pending';
+                }
+
+                const id = card.dataset.objective;
+                const localData = localObjectives[id];
+
+                // Fetch current Firebase state once
+                onValue(objectivesRef, (snap) => {
+                    const fbObjs = snap.val() || {};
+                    const matchingEntry = Object.entries(fbObjs).find(([fbId, fbData]) => fbData.title === localData.title);
+
+                    if (matchingEntry) {
+                        const [fbId] = matchingEntry;
+                        update(ref(db, `objectives/${fbId}`), { status: newStatus });
+                    } else if (newStatus !== 'pending') {
+                        // Create new objective if activating or completing
+                        const newObj = {
+                            title: localData.title,
+                            description: localData.description,
+                            priority: localData.priority,
+                            timestamp: Date.now(),
+                            status: newStatus
+                        };
+                        push(objectivesRef, newObj);
+                    }
+                }, { onlyOnce: true });
+            });
+        });
+
         function updateCounters() {
             const allCards = document.querySelectorAll('.objective-card');
             let completed = 0;
@@ -881,4 +936,3 @@
     </script>
 </body>
 </html>
-                
